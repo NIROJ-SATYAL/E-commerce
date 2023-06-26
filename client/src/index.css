@@ -1,0 +1,113 @@
+*{
+  margin: 0px;
+  padding:0px;
+  box-sizing: border-box;
+  
+}
+
+
+
+.navbar{
+  font-family: 'Poppins', sans-serif;
+  font-size:20px;
+  line-height: 25px;
+  box-shadow: 0px 8px 6px -6px grey;
+  border-bottom: solid grey;
+}
+
+
+.nav-link{
+  font-weight: 300!important;
+
+}
+
+
+.active{
+  color: orange!important;
+}
+
+
+
+
+/* footer start */
+.footer{
+  background-image: linear-gradient(to right, rgb(46, 45, 45) , rgb(22, 22, 16));
+  color:white ;
+  text-align: center;
+  padding:6px;
+
+
+}
+
+.footer a{
+  text-decoration: none;
+  padding:7px;
+  color:white
+}
+
+.footer a:hover{
+  color:grey;
+  border-bottom: 1px solid red ;
+}
+
+
+/* page not found */
+
+
+.pnf{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 65vh;
+}
+
+
+.pnf-title{
+  
+  font-weight: bold;
+  border-bottom: 3px solid grey;
+  font-size: 60px;
+}
+
+
+
+
+/* pages */
+
+.contactus{
+  min-height:65vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.register{
+  display:flex;
+  min-height: 80vh;
+  padding-bottom: 20px;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-image:linear-gradient(to bottom, rgba(245, 246, 252, 0.52), rgba(117, 19, 93, 0.73));
+  
+  
+}
+
+
+.form{
+  width: 40vw;
+  padding: 20px;
+  border: 2px solid rgba(245, 246, 252, 0.52) ;
+  box-shadow: 10px 10px 8px  #888888;
+  background-color: aliceblue;
+
+  
+}
+
+.form-control{
+  border:none;
+  border-bottom: 2px solid black;
+  border-radius: 0;
+}
