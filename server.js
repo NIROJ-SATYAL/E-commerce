@@ -6,6 +6,7 @@ import authRoute from './routes/authRouter.js';
 import protect_router from './routes/ProtectRoute.js';
 import morgan from 'morgan';
 import category_router from './routes/CategoryRoute.js';
+import product_router from './routes/ProductRoute.js';
 dotenv.config()
 
 
@@ -26,7 +27,8 @@ app.use(express.urlencoded({ extended: true }));
 //routes
 app.use("/api/v1/auth",authRoute)
 app.use("/api/v1/auth",protect_router)
-app.use("api/v1/auth",category_router)
+app.use("/api/v1/category",category_router)
+app.use("/api/v1/product",product_router)
 
 
 
