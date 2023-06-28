@@ -10,7 +10,7 @@ const ProductSchema=mongoose.Schema({
     ,
     slug:{
         type:String,
-        require:true
+        
     },
     disription:{
         type:String,
@@ -31,7 +31,7 @@ const ProductSchema=mongoose.Schema({
             require:true
         },
         photo:{
-            type:Buffer,
+            data:Buffer,
             contentType:String
         },
         shipping:{
@@ -42,7 +42,7 @@ const ProductSchema=mongoose.Schema({
 },{timestamps:true})
 
 
-const Product=mongoose.model("category",ProductSchema)
+const Product=mongoose.model("product",ProductSchema)
 
 
 export default Product
