@@ -4,6 +4,7 @@ import slugify from "slugify";
 const categorycontroller = async (req, res) => {
   try {
     const { name } = req.body;
+    console.log(name)
     if (!name) {
       return res.status(401).send({
         success: false,
@@ -39,6 +40,7 @@ const updatecategory = async (req, res) => {
   try {
     const { name } = req.body;
     const { id } = req.params;
+    console.log(name)
 
     const response = await Category.findByIdAndUpdate(
       id,
@@ -90,10 +92,10 @@ const deletecategory= async (req,res)=>{
         const response= await Category.findByIdAndDelete(id)
         if(response)
         {
-             const data=await Category.find({})
+            
              res.send({
                 success:true,
-                message:"delete successfully",data
+                message:"delete successfully"
             })
         }
         
