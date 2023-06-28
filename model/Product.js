@@ -12,7 +12,7 @@ const ProductSchema=mongoose.Schema({
         type:String,
         
     },
-    disription:{
+    discription:{
         type:String,
         require:true
     },
