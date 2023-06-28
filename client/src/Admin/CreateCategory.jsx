@@ -105,7 +105,7 @@ const CreateCategory = () => {
                             onClick={() => {
                               setIsModal(true);
                               setUpdatename(c.name);
-                              setDeleteId(c._id);
+                              setId(c._id);
                             }}
                           >
                             update
