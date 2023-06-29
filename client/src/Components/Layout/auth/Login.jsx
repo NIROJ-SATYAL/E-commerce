@@ -83,7 +83,10 @@ const Login = () => {
                 aria-describedby="emailHelp"
                 name="email"
               />
-              <ErrorMessage name="email" />
+              <div style={{ color: "red" }}>
+      <br />
+      <ErrorMessage name="email" />
+    </div>
             </div>
             <div className="mb-3">
               <label htmlFor="exampleInputPassword1" className="form-label">
@@ -95,7 +98,10 @@ const Login = () => {
                 name="password"
                 id="exampleInputPassword1"
               />
-              <ErrorMessage name="password" />
+              <div style={{ color: "red" }}>
+      <br />
+      <ErrorMessage name="password" />
+    </div>
             </div>
 
             <div className="mb-2">
