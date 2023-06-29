@@ -8,6 +8,7 @@ import CategoryForm from "./Form/CategoryForm";
 import { Modal } from "antd";
 import UpdateForm from "./Form/UpdateForm";
 
+
 const CreateCategory = () => {
   const [categories, setCategories] = useState([]);
   const [updatename, setUpdatename] = useState(null);

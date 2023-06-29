@@ -19,6 +19,7 @@ import CreateProduct from './Admin/CreateProduct';
 import UserList from './Admin/UserList';
 import Profile from './user/Profile';
 import Order from './user/Order';
+import ProductList from './Admin/ProductList';
 
 
 function App() {
@@ -47,6 +48,7 @@ function App() {
       <Route path="/admin-dashboard" element={<AdminDashboard/>}/> 
       <Route path="/admin-dashboard/create-category" element={<CreateCategory/>}/> 
       <Route path="/admin-dashboard/create-product" element={<CreateProduct/>}/> 
+      <Route path="/admin-dashboard/product-list" element={<ProductList/>}/>
       <Route path="/admin-dashboard/user" element={<UserList/>}/> 
      
       

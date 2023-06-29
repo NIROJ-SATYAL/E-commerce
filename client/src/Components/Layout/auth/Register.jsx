@@ -42,8 +42,7 @@ const Register = () => {
         setTimeout(() => {
           navigate("/login");
         }, 4000); // Adjust the delay time as needed
-      }
-       else {
+      } else {
         toast.error(response.data.message);
       }
     } catch (error) {
@@ -72,7 +71,10 @@ const Register = () => {
                 aria-describedby="emailHelp"
                 name="name"
               />
-              <ErrorMessage name="name" />
+              <div style={{ color: "red" }}>
+                <br />
+                <ErrorMessage name="name" />
+              </div>
             </div>
             <div className="mb-2  ">
               <label htmlFor="exampleInputEmail1" className="form-label">
@@ -85,7 +87,10 @@ const Register = () => {
                 aria-describedby="emailHelp"
                 name="email"
               />
-              <ErrorMessage name="email" />
+              <div style={{ color: "red" }}>
+                <br />
+                <ErrorMessage name="email" />
+              </div>
             </div>
             <div className="mb-2">
               <label htmlFor="exampleInputPassword1" className="form-label">
@@ -97,7 +102,10 @@ const Register = () => {
                 name="password"
                 id="exampleInputPassword1"
               />
-              <ErrorMessage name="password" />
+              <div style={{ color: "red" }}>
+                <br />
+                <ErrorMessage name="password" />
+              </div>
             </div>
             <div className="mb-2">
               <label htmlFor="exampleInputPassword1" className="form-label">
@@ -109,7 +117,10 @@ const Register = () => {
                 name="phone"
                 id="exampleInputPassword1"
               />
-              <ErrorMessage name="phone" />
+              <div style={{ color: "red" }}>
+                <br />
+                <ErrorMessage name="phone" />
+              </div>
             </div>
             <div className="mb-2">
               <label htmlFor="exampleInputPassword1" className="form-label">
@@ -121,7 +132,10 @@ const Register = () => {
                 name="address"
                 id="exampleInputPassword1"
               />
-              <ErrorMessage name="address" />
+              <div style={{ color: "red" }}>
+                <br />
+                <ErrorMessage name="address" />
+              </div>
             </div>
 
             <div className="mb-2">
