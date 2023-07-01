@@ -9,7 +9,7 @@ const PreviewImage = ({ photo }) => {
         seetPreview(reader.result)
     };
     return (
-        <div>{preview?<img src={preview} alt="preview" width="100px" height="100px"/>:"loading..."}</div>
+        <div>{preview?<img src={preview} alt="preview" width="250px" height="250px"/>:"loading..."}</div>
     )
 };
 

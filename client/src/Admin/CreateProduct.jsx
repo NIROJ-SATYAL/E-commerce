@@ -1,12 +1,36 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Layout from "../Components/Layout/LayouSt";
 import AdminMenu from "./AdminMenu";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 import PreviewImage from "../Formik/PreviewImage";
+import { Select } from "antd";
+import axios from "axios";
+import { toast } from "react-toastify";
+
+const { Option } = Select;
 
 const CreateProduct = () => {
   const fileref = useRef(null);
+  const [AllCategory, setAllCategory] = useState(null);
+
+  const getCategory = async () => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:5000/api/v1/category/get-category"
+      );
+      console.log(data);
+      if (data.success) {
+        setAllCategory(data?.response);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getCategory();
+  }, []);
 
   const initialValues = {
     name: "",
@@ -15,6 +39,7 @@ const CreateProduct = () => {
     category: "",
     quantity: "",
     photo: "",
+    shipping: "",
   };
 
   const validFileExtensions = {
@@ -34,6 +59,7 @@ const CreateProduct = () => {
     price: yup.number().required("Price must be required"),
     category: yup.string().required("category must be required"),
     quantity: yup.number().required("quantity must be required"),
+    shipping: yup.string().required("shipping must be required"),
     photo: yup
       .mixed()
       .required("Required")
@@ -46,9 +72,35 @@ const CreateProduct = () => {
         (value) => value && value.size <= 4000000
       ),
   });
-  const onSubmit = (values, { resetForm }) => {
+  const onSubmit = async (values, { resetForm, setFieldValue }) => {
+    const user = JSON.parse(localStorage.getItem("auth"));
     console.log(values);
-    resetForm();
+    const formData = new FormData();
+    Object.keys(values).forEach((key) => {
+      formData.append(key, values[key]);
+    });
+
+    try {
+      const { data } = await axios.post(
+        "http://localhost:5000/api/v1/product/create-product",
+        formData,
+        {
+          headers: {
+            authorization: user.token,
+          },
+        }
+      );
+      console.log(data);
+      if (data.success) {
+        toast.success(data.message);
+        resetForm();
+        setFieldValue("category", ""); // Reset category field
+        setFieldValue("shipping", ""); // Reset shipping field
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("failed to create product");
+    }
   };
   return (
     <Layout title={"Admin-Dashboard create product"}>
@@ -112,16 +164,35 @@ const CreateProduct = () => {
                         <ErrorMessage name="price" />
                       </div>
                     </div>
-                    <div className="mb-3">
+                    <div className="mb-3  ">
                       <label htmlFor="category" className="form-label">
                         category:
                       </label>
-                      <Field
-                        type="text"
-                        className="form-control"
-                        name="category"
-                        id="category"
-                      />
+
+                      <Field name="category">
+                        {({ field }) => (
+                          <Select
+                            {...field}
+                           placeholder="category"
+                            size="large"
+                            className="form-select"
+                            showSearch
+                            bordered={false}
+                            value={field.value}
+                            
+                            onChange={(value) => setFieldValue("category", value)}
+                          >
+                            {AllCategory?.map((c) => {
+                              return (
+                                <Option key={c._id} value={c._id}>
+                                  {c.name}
+                                </Option>
+                              );
+                            })}
+                          </Select>
+                        )}
+                      </Field>
+
                       <div style={{ color: "red" }}>
                         <br />
                         <ErrorMessage name="category" />
@@ -141,6 +212,34 @@ const CreateProduct = () => {
                       <div style={{ color: "red" }}>
                         <br />
                         <ErrorMessage name="quantity" />
+                      </div>
+                    </div>
+
+                    <div className="mb-3  ">
+                      <label htmlFor="shipping" className="form-label">
+                        shipping:
+                      </label>
+
+                      <Field name="shipping">
+                        {({ field }) => (
+                          <Select
+                            {...field}
+                            placeholder="Shipping"
+                            size="large"
+                            className="form-select"
+                            showSearch
+                            bordered={false}
+                            value={field.value} // Set the selected value
+      onChange={(value) => setFieldValue("shipping", value)}
+                          >
+                            <Option value="0">Yes</Option>
+                            <Option value="1">No</Option>
+                          </Select>
+                        )}
+                      </Field>
+                      <div style={{ color: "red" }}>
+                        <br />
+                        <ErrorMessage name="category" />
                       </div>
                     </div>
 

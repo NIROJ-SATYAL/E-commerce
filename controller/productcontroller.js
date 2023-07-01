@@ -1,13 +1,14 @@
 import slugify from "slugify"
 import Product from "../model/Product.js"
 import fs from 'fs'
+import mongoose from "mongoose"
 
 const createproduct= async(req,res)=>{
-    const {name,slug,discription,category,price,quantity,shipping}=req.fields
+    const {name,discription,category,price,quantity,shipping}=req.fields
     const {photo}=req.files
-    console.log(photo)
+    
     try {
-        if(!name || !discription || !category || !price || !quantity || !photo )
+        if(!name || !discription || !category || !price || !quantity || !photo || !shipping )
         {
            return res.status(404).send({
             success:false,
@@ -21,13 +22,18 @@ const createproduct= async(req,res)=>{
                 success:false,
                 message:"photo size should be less then 2mb"
             })
-        }
+        } 
+
+  
+        
         const products= new Product({...req.fields,slug:slugify(name)})
         if(products.photo)
         {
                 products.photo.data= fs.readFileSync(photo.path)
                 products.photo.contentType=photo.type
         }
+
+        
         await products.save()
         res.status(200).send({
             success:true,
