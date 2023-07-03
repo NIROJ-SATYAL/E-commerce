@@ -20,6 +20,7 @@ import UserList from './Admin/UserList';
 import Profile from './user/Profile';
 import Order from './user/Order';
 import ProductList from './Admin/ProductList';
+import SingleProductPage from './Admin/SingleProductPage';
 
 
 function App() {
@@ -46,6 +47,7 @@ function App() {
       <Route path="/admin-dashboard/create-product" element={<CreateProduct/>}/> 
       <Route path="/admin-dashboard/product-list" element={<ProductList/>}/>
       <Route path="/admin-dashboard/user" element={<UserList/>}/> 
+      <Route path="/admin-dashboard/product-list/:id" element={<SingleProductPage/>}/> 
      
       
       

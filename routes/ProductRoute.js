@@ -8,7 +8,7 @@ import formidable from 'express-formidable'
 const product_router= express.Router()
 
 
-product_router.get("/get-product",getproduct)
+product_router.post("/get-product",getproduct)
 product_router.get("/get-product/:id",getsingleproduct)
 product_router.get("/get-photo/:pid",getphotocontroller)
 product_router.post("/create-product",auth_middleware,isAdmin,formidable(),createproduct)

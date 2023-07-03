@@ -7,12 +7,18 @@ import PreviewImage from "../Formik/PreviewImage";
 import { Select } from "antd";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useParams,useNavigate } from "react-router-dom";
 
 const { Option } = Select;
 
-const CreateProduct = () => {
+const SingleProductPage = () => {
+    const Navigate=useNavigate()
+  const { id } = useParams();
+  console.log(id);
   const fileref = useRef(null);
+
   const [AllCategory, setAllCategory] = useState(null);
+  const [singleproduct, setSingleProduct] = useState(null);
 
   const getCategory = async () => {
     try {
@@ -28,19 +34,26 @@ const CreateProduct = () => {
     }
   };
 
+  //get single product
+
+  const getSingleProduct = async () => {
+    try {
+      const { data } = await axios.get(
+        `http://localhost:5000/api/v1/product/get-product/${id}`
+      );
+      console.log(data);
+      if (data.success) {
+        setSingleProduct(data?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getCategory();
+    getSingleProduct();
   }, []);
-
-  const initialValues = {
-    name: "",
-    discription: "",
-    price: "",
-    category: "",
-    quantity: "",
-    photo: "",
-    shipping: "",
-  };
 
   const validFileExtensions = {
     image: ["jpg", "gif", "png", "jpeg", "svg", "webp"],
@@ -81,8 +94,8 @@ const CreateProduct = () => {
     });
 
     try {
-      const { data } = await axios.post(
-        "http://localhost:5000/api/v1/product/create-product",
+      const { data } = await axios.put(
+        `http://localhost:5000/api/v1/product/update-product/${id}`,
         formData,
         {
           headers: {
@@ -91,15 +104,16 @@ const CreateProduct = () => {
         }
       );
       console.log(data);
-      if (data.success) {
+      if (data?.success) {
         toast.success(data.message);
         resetForm();
         setFieldValue("category", ""); // Reset category field
         setFieldValue("shipping", ""); // Reset shipping field
+        Navigate("/admin-dashboard/product-list")
       }
     } catch (error) {
       console.log(error);
-      toast.error("failed to create product");
+      toast.error("failed to update product");
     }
   };
   return (
@@ -110,10 +124,19 @@ const CreateProduct = () => {
             <AdminMenu />
           </div>
           <div className="col-md-9 ">
-          <h1 className="text-center">Create Category</h1>
+            <h1 className="text-center">Update Product</h1>
             <div className="d-flex justify-content-center align-item-center">
               <Formik
-                initialValues={initialValues}
+                initialValues={{
+                  name: singleproduct?.name,
+                  discription: singleproduct?.discription,
+                  price: singleproduct?.price,
+                  category: singleproduct?.category?._id,
+                  quantity: singleproduct?.quantity,
+                  shipping: singleproduct?.shipping,
+                  photo: "",
+                }}
+                enableReinitialize
                 validationSchema={validationSchema}
                 onSubmit={onSubmit}
               >
@@ -174,14 +197,15 @@ const CreateProduct = () => {
                         {({ field }) => (
                           <Select
                             {...field}
-                           placeholder="category"
+                            placeholder="category"
                             size="large"
                             className="form-select"
                             showSearch
                             bordered={false}
-                            value={field.value}
-                            
-                            onChange={(value) => setFieldValue("category", value)}
+                            value={field?.value}
+                            onChange={(value) =>
+                              setFieldValue("category", value)
+                            }
                           >
                             {AllCategory?.map((c) => {
                               return (
@@ -230,11 +254,13 @@ const CreateProduct = () => {
                             className="form-select"
                             showSearch
                             bordered={false}
-                            value={field.value} // Set the selected value
-      onChange={(value) => setFieldValue("shipping", value)}
+                            value={field?.value? "Yes" : "No"} // Set the selected value
+                            onChange={(value) =>
+                              setFieldValue("shipping", value)
+                            }
                           >
-                            <Option value="1">Yes</Option>
-                            <Option value="0">No</Option>
+                            <Option value="0">Yes</Option>
+                            <Option value="1">No</Option>
                           </Select>
                         )}
                       </Field>
@@ -262,7 +288,17 @@ const CreateProduct = () => {
                       >
                         upload image
                       </button>
-                      {values.photo && <PreviewImage photo={values.photo} />}
+                      {values.photo ? (
+                        <PreviewImage photo={values.photo} />
+                      ) : (
+                        <img
+                          src={`http://localhost:5000/api/v1/product/get-photo/${id}`}
+                          alt="photo"
+                          width="250px"
+                          height="250px"
+                        />
+                      )}
+
                       <div style={{ color: "red" }}>
                         <br />
                         <ErrorMessage name="photo" />
@@ -273,7 +309,7 @@ const CreateProduct = () => {
                         type="submit"
                         className="btn btn-primary align-center"
                       >
-                        Submit
+                        update product
                       </button>
                     </div>
                   </Form>
@@ -287,4 +323,4 @@ const CreateProduct = () => {
   );
 };
 
-export default CreateProduct;
+export default SingleProductPage;

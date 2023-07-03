@@ -62,8 +62,25 @@ const createproduct= async(req,res)=>{
 
 const getproduct= async(req,res)=>{
     try {
+        const {checked,radio}=req.body;
+       console.log(checked)
+       
+        let filter={}
+        if(checked?
+            .length>0)
+        {
+            filter.category= checked 
+        }
+        if(radio?.length===2)
+        {
+            filter.price={$gte:radio[0],$lte:radio[1]}
+        }
+        console.log(filter)
+        
 
-        const response=await Product.find({}).select("-photo").limit(10).sort({createdAt:-1}).populate("category")
+
+        const response=await Product.find(filter).select("-photo").limit(10).sort({createdAt:-1}).populate("category")
+        console.log(response)
         if(!response)
         {
              return res.status(404).send({
@@ -123,8 +140,8 @@ const getsingleproduct=async(req,res)=>{
     try {
         const {id}=req.params
 
-        const singleproduct=await Product.findById(id).select("-photo").populate("category")
-        if(!singleproduct)
+        const data=await Product.findById(id).populate("category")
+        if(!data)
         {
             return res.status(404).send({
                 success:false,
@@ -135,7 +152,7 @@ const getsingleproduct=async(req,res)=>{
         res.status(202).send({
             success:true,
             message:"successfull",
-           singleproduct
+           data
 
         })
 
