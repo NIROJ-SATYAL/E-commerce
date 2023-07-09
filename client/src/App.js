@@ -21,23 +21,28 @@ import Profile from './user/Profile';
 import Order from './user/Order';
 import ProductList from './Admin/ProductList';
 import SingleProductPage from './Admin/SingleProductPage';
+import SingleProduct from './pages/SingleProduct';
+import Cart from './pages/Cart';
 
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/product/:slug" element={<SingleProduct />} />
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/privacy" element={<Privacy />} />
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
       <Route path="/forgot" element={<Forgot />} />
+      
       <Route path="*" element={<PageNotFound />} />
       <Route Component={PrivateRoutes}>
         <Route path="/user-dashboard" element={<Dashboard />} />
         <Route path="/user/profile" element={<Profile />} />
         <Route path="/user/order" element={<Order />} />
+        <Route path="/user/cart" element  ={<Cart/>}/>
       </Route>
 
       <Route Component={AdminRoutes}>

@@ -3,21 +3,64 @@ import Layout from '../Components/Layout/LayouSt';
 import AdminMenu from './AdminMenu';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { Card } from 'antd';
-import { Link } from 'react-router-dom';
-const { Meta } = Card;
+
+import { Link, useNavigate  } from 'react-router-dom';
+import { Modal } from 'antd';
+
+
+
 
 const ProductList = () => {
   const [product, setProduct] = useState([]);
-  const [open, setOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [id,setId]=useState()
+  const Navigate=useNavigate()
+
+ 
+  const handleOk = async() => {
+    try {
+      const user = JSON.parse(localStorage.getItem("auth"));
+      const { data } = await axios.delete(`http://localhost:5000/api/v1/product/delete-product/${id}`,{
+        headers: {
+          authorization: user.token,
+        },
+      });
+      console.log(data)
+
+      if(data.success===true)
+      {
+        setIsModalOpen(false);
+        toast.success(data.message)
+        fetchProduct();
+
+      }
+      else{
+        setIsModalOpen(false);
+        toast.success("Error to delete product")
+
+        
+      }
+      
+    } catch (error) {
+      
+    }
+
+   
+
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+ 
 
   const fetchProduct = async () => {
     try {
-      const { data } = await axios.get('http://localhost:5000/api/v1/product/get-product');
+      
+      const { data } = await axios.get('http://localhost:5000/api/v1/product/get-product-admin',);
       console.log(data);
       if (data?.success) {
-        toast.success(data.message);
-        setProduct(data.data);
+        toast.success(data?.message);
+        setProduct(data?.product);
       } else {
         toast.success(data.message);
       }
@@ -41,28 +84,50 @@ const ProductList = () => {
           <div className="col-md-9">
             <h1 className="text-center">Product List</h1>
             <div className="row">
-              {product?.map((item) => (
-                <div key={item._id} className="col-sm-2 col-md-4  pt-4">
-                  <Link to={`/admin-dashboard/product-list/${item._id}`}>
-                    <Card
-                      hoverable
-                      style={{
-                        width: 240,
-                      }}
-                      
-                      cover={
-                        <img alt="example" src={`http://localhost:5000/api/v1/product/get-photo/${item._id}`} />
-                      }
-                    >
-                      <Meta title={item.name}  description="click to cart to update product" />
-                      <button className='btn btn-danger'>
-                          delete
-                      </button>
-                    </Card>
-                  </Link>
-                </div>
-              ))}
+            <table class="table table-striped">
+  <thead>
+    <tr>
+      
+      <th scope="col">Name</th>
+      <th scope="col">Price</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">category</th>
+      <th scope="col">operation</th>
+    </tr>
+  </thead>
+  <tbody>
+  {product?.map((item) => (
+    <tr>
+      
+      <td>{item.name}</td>
+      <td>{item.price}</td>
+      <td>{item.quantity}</td>
+      <td>{item?.category?.name}</td>
+      <td className='m-3'>
+        <div className='d-flex justify-space-between '>
+  <button className="btn btn-light" onClick={()=>Navigate(`/admin-dashboard/product-list/${item._id}`)}><i className="bi bi-pen" /></button>
+  <button className="btn btn-light" onClick={()=>{
+    setId(item._id)
+    setIsModalOpen(true);
+
+  } }><i className="bi bi-x-octagon"></i></button>
+</div>
+
+      </td>
+    </tr>
+
+))}
+  
+  </tbody>
+</table>
+             
             </div>
+
+
+            <Modal title="Delete" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <p>Do you want to remove this product??</p>
+        
+      </Modal>
           </div>
         </div>
       </div>
@@ -71,3 +136,6 @@ const ProductList = () => {
 };
 
 export default ProductList;
+
+
+

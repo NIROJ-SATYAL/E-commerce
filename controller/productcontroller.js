@@ -62,12 +62,17 @@ const createproduct= async(req,res)=>{
 
 const getproduct= async(req,res)=>{
     try {
-        const {checked,radio}=req.body;
-       console.log(checked)
+        const {checked,radio,search}=req.body;
+        let page=Number(req.query.page) || 1;
+        let limit=10
+
+        let  skip=(page-1)*limit;
+       
+
+   
        
         let filter={}
-        if(checked?
-            .length>0)
+        if(checked?.length>0)
         {
             filter.category= checked 
         }
@@ -75,12 +80,15 @@ const getproduct= async(req,res)=>{
         {
             filter.price={$gte:radio[0],$lte:radio[1]}
         }
+        if (search) {
+            filter.name = { $regex: search, $options: "i" };
+          }
         console.log(filter)
         
 
 
-        const response=await Product.find(filter).select("-photo").limit(10).sort({createdAt:-1}).populate("category")
-        console.log(response)
+        const response=await Product.find(filter).select("-photo").limit(10).sort({createdAt:-1}).populate("category").skip(skip)
+        
         if(!response)
         {
              return res.status(404).send({
@@ -108,8 +116,37 @@ const getproduct= async(req,res)=>{
 
 }
 
+
+  const getProductForAdmin=async(req,res)=>{
+    try {
+
+        const response=await Product.find({}).select("-photo").sort({createdAt:-1}).populate("category")
+        console.log(response)
+        if(response)
+        {
+            res.status(200).send({
+                message:"successful",
+                success:true,
+                product:response
+            })
+        }
+
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({
+            message:'internal server error',
+            success:false,
+            error
+
+        })
+        
+    }
+  }
+
 const deleteproduct= async(req,res)=>{
     const {id}=req.params
+    console.log(id)
 
     try {
 
@@ -138,7 +175,7 @@ const deleteproduct= async(req,res)=>{
 
 const getsingleproduct=async(req,res)=>{
     try {
-        const {id}=req.params
+        const {id}=req.params;
 
         const data=await Product.findById(id).populate("category")
         if(!data)
@@ -243,5 +280,41 @@ const updateproduct= async(req,res)=>{
 }
 
 
+const relatedProduct=async(req,res)=>{
 
-export {createproduct,updateproduct,deleteproduct,getproduct,getsingleproduct,getphotocontroller}
+    try {
+
+        
+        const {pid,cid}=req.params;
+        const product= await Product.find({
+            category:cid,
+            _id:{$ne:pid}
+        }).select('-photo').populate("category")
+        console.log(product)
+        
+        if(product.length>0){
+            res.status(200).send({
+                success:true,
+                message:"successfully fetch related product",
+                product
+            })
+        }
+        
+    } catch (error) {
+
+        console.log(error)
+        res.status(500).send({
+            success:false,
+            message:"internal server error",
+            error
+
+        }
+
+        )
+        
+    }
+}
+
+
+
+export {createproduct,updateproduct,deleteproduct,getproduct,getsingleproduct,getphotocontroller,relatedProduct,getProductForAdmin}
